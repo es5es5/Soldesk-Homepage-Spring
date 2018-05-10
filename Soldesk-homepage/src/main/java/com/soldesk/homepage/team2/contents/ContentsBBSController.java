@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class ContentsController {
-	@RequestMapping(value="/contents.go", method= RequestMethod.GET)
-	public String goContents(HttpServletRequest request, HttpServletResponse response) {
-		ContentsDAO.getCdao().getDetailContents(request, response);
-		request.setAttribute("contents", "team2/contents/contents.jsp");
+public class ContentsBBSController {
+	@RequestMapping(value="/contentsBBS.go", method= RequestMethod.GET)
+	public String goContentsBBS(HttpServletRequest request, HttpServletResponse response) {
+		ContentsDAO.getCdao().getAllContents(request, response);
+		request.setAttribute("contentPage", "contents/contentsBBS.jsp");
 		return "index";
 	}
 }
