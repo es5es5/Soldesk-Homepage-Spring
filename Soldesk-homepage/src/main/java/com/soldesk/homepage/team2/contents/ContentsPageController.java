@@ -14,5 +14,6 @@ public class ContentsPageController {
 		ContentsDAO.getCdao().contentsPaging(Integer.parseInt(request.getParameter("p")), request, response);
 		request.setAttribute("contentPage", "contents/contentsBBS.jsp");
 		return "index";
+		
 	}
 }

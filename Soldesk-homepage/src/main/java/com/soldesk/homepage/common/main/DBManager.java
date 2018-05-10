@@ -6,17 +6,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.annotation.Resources;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 public class DBManager {
 
 	// 미리 연결을 몇개 만들어 놓고
 	// DB서버와 연결 해달라고 하면 만들어 놓은 연결을 주는 시스템
 	// ConnectionPool
-	
+
 	public static Connection connect() throws NamingException, SQLException {
 
 		// context.xml
@@ -26,6 +30,10 @@ public class DBManager {
 		DataSource ds = (DataSource) ctx.lookup("java:comp/env/SoldeskHomepage");
 
 		return ds.getConnection();
+	}
+
+	public static SqlSession newConnect() throws Exception {
+		return new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("Config.xml")).openSession();
 	}
 
 	// DB서버와 연결 해달라고 하면 그 때 연결을 맺어주는 시스템
@@ -41,9 +49,18 @@ public class DBManager {
 
 	public static void close(Connection con, PreparedStatement pstmt, ResultSet rs) {
 
-		try {rs.close();} catch (Exception e) {}
-		try {pstmt.close();} catch (Exception e) {}
-		try {con.close();} catch (Exception e) {}
+		try {
+			rs.close();
+		} catch (Exception e) {
+		}
+		try {
+			pstmt.close();
+		} catch (Exception e) {
+		}
+		try {
+			con.close();
+		} catch (Exception e) {
+		}
 
 	}
 
