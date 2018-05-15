@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,8 @@ public class ContentsDAO {
 	private SqlSession ss;
 	
 	private static final ContentsDAO CDAO = new ContentsDAO();
-	private ArrayList<Contents> contents;
-	private ArrayList<ContentsSubstance> substance;
+	private List<Contents> contents;
+	private List<ContentsSubstance> substance;
 
 	public ContentsDAO() {
 		// TODO Auto-generated constructor stub
@@ -148,40 +149,46 @@ public class ContentsDAO {
 		}
 	}
 
-	public void getDetailContents(HttpServletRequest request, HttpServletResponse response) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			con = DBManager.connect();
-			pstmt = con.prepareStatement("select * from SOLDESK_contents, SOLDESK_CONTENTS_SUBSTANCE, SOLDESK_TEACHER "
-					+ "where sc_no=? and sc_no = scs_contents_no and sc_teacher = st_no " + "order by scs_order");
-			pstmt.setString(1, request.getParameter("sc_no"));
-			rs = pstmt.executeQuery();
-			// if문으로 scs_info가 이미지인지 텍스트인지 강사페이지인지 구분하여 보낼 계획
-			substance = new ArrayList<>();
-			Contents c;
-			for (int i = 0; rs.next(); i++) {
-				if (i == 0) {
-					c = contents(request, con, pstmt, rs);
-					request.setAttribute("t", teacher(request, con, pstmt, rs));
-					request.setAttribute("c", c);
-					request.setAttribute("totalMonth", totalMonth(c));
-					request.setAttribute("totalHours", totalHours(c));
-					request.setAttribute("totalWeeks", totalWeeks(c));
-				}
-				substance.add(substance(request, con, pstmt, rs));
+	public void getDetailContents(Contents c, HttpServletRequest request, HttpServletResponse response) {
+		List<Contents> detailContents = ss.getMapper(ContentsMapper.class).getDetailContents(c);
+		for (int i = 0; i < detailContents.size(); i++) {
+			if (i==0) {
+				
 			}
-			if (substance.size() == 0) {
-				substance.add(null);
-			}
-			request.setAttribute("substance", substance);
-		} catch (Exception e) {
-			e.printStackTrace();
-			request.setAttribute("r", "DB서버오류");
-		} finally {
-			DBManager.close(con, pstmt, rs);
 		}
+		//		Connection con = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		try {
+//			con = DBManager.connect();
+//			pstmt = con.prepareStatement("select * from SOLDESK_contents, SOLDESK_CONTENTS_SUBSTANCE, SOLDESK_TEACHER "
+//					+ "where sc_no=? and sc_no = scs_contents_no and sc_teacher = st_no " + "order by scs_order");
+//			pstmt.setString(1, request.getParameter("sc_no"));
+//			rs = pstmt.executeQuery();
+//			// if문으로 scs_info가 이미지인지 텍스트인지 강사페이지인지 구분하여 보낼 계획
+//			substance = new ArrayList<>();
+//			Contents c = new Contents();
+//			for (int i = 0; rs.next(); i++) {
+//				if (i == 0) {
+//					c = contents(request, con, pstmt, rs);
+//					request.setAttribute("t", teacher(request, con, pstmt, rs));
+//					request.setAttribute("c", c);
+//					request.setAttribute("totalMonth", totalMonth(c));
+//					request.setAttribute("totalHours", totalHours(c));
+//					request.setAttribute("totalWeeks", totalWeeks(c));
+//				}
+//				substance.add(substance(request, con, pstmt, rs));
+//			}
+//			if (substance.size() == 0) {
+//				substance.add(null);
+//			}
+//			request.setAttribute("substance", substance);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			request.setAttribute("r", "DB서버오류");
+//		} finally {
+//			DBManager.close(con, pstmt, rs);
+//		}
 	}
 
 	public Teacher teacher(HttpServletRequest request, Connection con, PreparedStatement pstmt, ResultSet rs)
@@ -228,7 +235,6 @@ public class ContentsDAO {
 			cal.add(Calendar.DATE, 1);
 		}
 		return totalDays;
-
 	}
 
 	public int totalMonth(Contents c) {

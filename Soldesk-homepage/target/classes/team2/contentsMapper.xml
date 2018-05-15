@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soldesk.homepage.team2.contents">
+	<select id="getDetailContents"
+		parameterType="com.soldesk.team2.contents" resultType="com.soldesk.team2.contents">
+		select *
+		from SOLDESK_contents, SOLDESK_CONTENTS_SUBSTANCE, SOLDESK_TEACHER
+		where sc_no=#{sc_no} and sc_no = scs_contents_no and sc_teacher = st_no
+		order by scs_order
+	</select>
+
+</mapper>
