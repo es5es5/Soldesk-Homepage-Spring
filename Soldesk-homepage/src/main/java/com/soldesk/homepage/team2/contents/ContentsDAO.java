@@ -151,12 +151,37 @@ public class ContentsDAO {
 
 	public void getDetailContents(Contents c, HttpServletRequest request, HttpServletResponse response) {
 		List<Contents> detailContents = ss.getMapper(ContentsMapper.class).getDetailContents(c);
+		substance = new ArrayList<>();
+		
 		for (int i = 0; i < detailContents.size(); i++) {
+			Contents ContentsObject = detailContents.get(i);
 			if (i==0) {
-				
+				c.setSc_category(c.getSc_category());
+				c.setSc_expense(c.getSc_expense());
+				c.setSc_no(c.getSc_no());
+				c.setSc_schedule_finish(c.getSc_schedule_finish());
+				c.setSc_schedule_start(c.getSc_schedule_start());
+				c.setSc_title(c.getSc_title());
+				c.setSc_week(c.getSc_week());
+				c.setSc_capacity(c.getSc_capacity());
+				c.setSc_teacher(c.getSc_teacher());
+//				request.setAttribute("t", t);
+//				request.setAttribute("c", c);
+//				request.setAttribute("totalMonth", totalMonth(c));
+//				request.setAttribute("totalHours", totalHours(c));
+//				request.setAttribute("totalWeeks", totalWeeks(c));
 			}
+//			substance.add(substance(request, con, pstmt, rs));
 		}
-		//		Connection con = null;
+		if (substance.size() ==0 ) {
+			substance.add(null);
+		}
+		
+		request.setAttribute("substance", substance);
+//		============================= юлго JSP
+		
+		
+//		Connection con = null;
 //		PreparedStatement pstmt = null;
 //		ResultSet rs = null;
 //		try {
